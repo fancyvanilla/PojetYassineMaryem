@@ -26,8 +26,8 @@ public class userDao {
             System.out.println(e.getMessage());
         }
     }
-    public String Signup(String name,String password,Boolean role) throws SQLException {
-        if (!isValidPassword(password)) return "Invalid Password.Try again!";
+    public Integer Signup(String name,String password,Boolean role) throws SQLException {
+        if (!isValidPassword(password)) return -1;
         if (login(name,password)==null)
         {
             String sql="insert into users(name,password,role) values(?,?,?)";
@@ -36,9 +36,9 @@ public class userDao {
             stmt2.setString(2,password);
             stmt2.setBoolean(3,role);
             stmt2.execute();
-            return "Signup successful!";
+            return 0;
         }
-        return "You're a registered user.Try to login instead!";
+        return 1;
     }
     public User login(String name,String password) throws SQLException {
         String sql="select * from users where name=? and password=?";

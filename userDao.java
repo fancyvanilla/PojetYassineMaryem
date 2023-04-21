@@ -31,10 +31,9 @@ public class userDao {
         if (login(name,password)==null)
         {
             String sql="insert into users(name,password,role) values(?,?,?)";
-            String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
             PreparedStatement stmt2=con.prepareStatement(sql);
             stmt2.setString(1,name);
-            stmt2.setString(2,hashedPassword);
+            stmt2.setString(2,password);
             stmt2.setBoolean(3,role);
             stmt2.execute();
             return "Signup successful!";
@@ -42,12 +41,12 @@ public class userDao {
         return "You're a registered user.Try to login instead!";
     }
     public User login(String name,String password) throws SQLException {
-        String sql="select * from users where name=?";
-        String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+        String sql="select * from users where name=? and password=?";
         PreparedStatement stmt=con.prepareStatement(sql);
         stmt.setString(1,name);
+        stmt.setString(2,password);
         ResultSet res=stmt.executeQuery();
-        if (res.next() && BCrypt.checkpw(password, res.getString(password)))
+        if (res.next())
         {
             User user=new User();
             user.setName(name);

@@ -1,19 +1,15 @@
-package com.example.New;
-import org.springframework.cglib.beans.BeanMap;
-import org.springframework.stereotype.Repository;
 import java.sql.*;
 import java.util.*;
 import java.util.Date;
 
-import org.mindrot.jbcrypt.BCrypt;
+import org.mindrot.jbcrypt.BCrypt; 
 import static java.lang.Character.isDigit;
 import static java.lang.Character.isLetter;
 
-@Repository
 public class userDao {
-    String dbPassword = "secret";
+    String dbPassword = "secret"; 
     String dbName = "root";
-    String url = "jdbc:mysql://localhost:3306/app";
+    String url = "jdbc:mysql://localhost:3306/app";//juste badel app b esm database
     private Connection con;
     userDao()
     {

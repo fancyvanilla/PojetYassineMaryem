@@ -1,15 +1,10 @@
-package com.example.New;
-import org.springframework.cglib.beans.BeanMap;
-import org.springframework.stereotype.Repository;
 import java.sql.*;
 import java.util.*;
 import java.util.Date;
-
 import org.mindrot.jbcrypt.BCrypt;
 import static java.lang.Character.isDigit;
 import static java.lang.Character.isLetter;
 
-@Repository
 public class userDao {
     String dbPassword = "secret";
     String dbName = "root";
@@ -26,33 +21,34 @@ public class userDao {
             System.out.println(e.getMessage());
         }
     }
-    public Integer Signup(String name,String password,Boolean role) throws SQLException {
+   public int Signup(String name,String password,Boolean role) throws SQLException {
         if (!isValidPassword(password)) return -1;
         if (login(name,password)==null)
         {
             String sql="insert into users(name,password,role) values(?,?,?)";
+            String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
             PreparedStatement stmt2=con.prepareStatement(sql);
             stmt2.setString(1,name);
-            stmt2.setString(2,password);
+            stmt2.setString(2,hashedPassword);
             stmt2.setBoolean(3,role);
             stmt2.execute();
             return 0;
         }
         return 1;
     }
-    public User login(String name,String password) throws SQLException {
-        String sql="select * from users where name=? and password=?";
+   public User login(String name,String password) throws SQLException {
+        String sql="select * from users where name=?";
+        String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
         PreparedStatement stmt=con.prepareStatement(sql);
         stmt.setString(1,name);
-        stmt.setString(2,password);
         ResultSet res=stmt.executeQuery();
-        if (res.next())
+        if (res.next() && BCrypt.checkpw(password, res.getString(password)))
         {
             User user=new User();
             user.setName(name);
             user.setId(res.getInt("id"));
             user.setPassword(res.getString("password"));
-            user.setRole(res.getBoolean("role"));
+            user.setRole(res.getInt("role"));
             return user;
         }
         return null;

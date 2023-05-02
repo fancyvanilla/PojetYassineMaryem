@@ -1,0 +1,39 @@
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GridLayout;
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.border.Border;
+import java.awt.Font;
+
+public class DynamicPanelGrid1 extends JPanel {
+    
+    private String[] labels;
+    private Border border = BorderFactory.createLineBorder(Color.BLACK);
+    private int panelWidth = 100;
+    private int panelHeight = 100;
+
+    public DynamicPanelGrid1() {
+        super(new GridLayout(0, 2, 100, 100));
+         String[] labels={"proba","coding","cybersec"};
+         this.labels=labels;
+         /*setPreferredSize(new Dimension(200,200));*/
+         setBackground(new Color(0, 0, 0, 0));
+         setBorder(BorderFactory.createEmptyBorder()); // set the border to have zero width
+            for (String label : labels) {
+                System.out.println(label);
+                JPanel panel = new JPanel();
+                panel.setPreferredSize(new Dimension(200, 200)); // set fixed panel size
+                panel.setBorder(border);
+                panel.setBackground(new Color(0, 0, 0, 0));
+                JLabel Label = new JLabel(label);
+                Label.setFont(new Font("Arial", Font.ITALIC, 20));
+                panel.add(Label);
+                add(panel);
+    }
+revalidate();
+repaint();
+
+}
+}

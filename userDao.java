@@ -53,6 +53,14 @@ public class userDao {
         }
         return null;
     }
+      public void deleteUser(int id) throws SQLException {
+        String sql="delete from users where id=?;delete from student_course where student_id=?";
+          // adding this in the near future: ";delete from homework where student_id=?"
+        PreparedStatement stmt=con.prepareStatement(sql);
+        stmt.setInt(1,id);
+        stmt.setInt(2,id);
+        stmt.execute(); // OR executeUpdate which returns the number of rows affected idk if we gona need it
+      }
     private Boolean isValidPassword(String password) {
         if (password.length() < 8) return false;
         boolean containLetters = false;
@@ -192,14 +200,17 @@ public class userDao {
         }
         return arr;
     }
-    public Map<Integer,Integer> getRanking(Integer id) throws SQLException {
+    public Map<User,Integer> getRanking(Integer id) throws SQLException {
         String sql = "{CALL getRanking(?);}"; //procedure stockée ta zahi
         CallableStatement stmt = con.prepareCall(sql);
         stmt.setInt(1,id);
         ResultSet res= stmt.executeQuery();
-        Map<Integer, Integer> map = new LinkedHashMap<>();
-        while(res.next())
-            map.put(res.getInt("student_id"),res.getInt("score"));
+        Map<User, Integer> map = new LinkedHashMap<>();
+        while(res.next()){
+            User user=new User();
+            user.setId(res.getInt("student_id");
+            user.setName(res.getString("student_name");
+            map.put(user,res.getInt("score"));    //implementation of equals() and hashCode() methods is looked upon because bekhla.
         return map;
     }
     public void closeConnection() throws SQLException {

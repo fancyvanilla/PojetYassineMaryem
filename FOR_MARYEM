@@ -1,0 +1,26 @@
+public ArrayList<Course>getUserCourses(int id_user) throws SQLException {
+        String sql;
+        User user=this.getUserById(id_user);
+        if (user.getRole()==0) {sql="select * from courses a join course_student b on a.id=b.course_id and b.student_id=? ";}
+        else {sql ="select * from courses where teach_id=? ";}
+        PreparedStatement stmt=con.prepareStatement(sql);
+        stmt.setInt(1,id_user);
+        ResultSet res=stmt.executeQuery();
+        ArrayList<Course> arr=new ArrayList<>();
+        while (res.next()) {
+            Course course = new Course();
+            course.setId(res.getInt("id"));
+            course.setTitle(res.getString("title"));
+            course.setBody(res.getString("body"));
+            course.setTeachId(res.getInt("teach_id"));
+            course.setCategory(res.getString("category"));
+            course.setHomework(res.getString("homework"));
+            course.setPoints(res.getInt("points"));
+            course.setH1(res.getString("h1"));
+            course.setH2(res.getString("h2"));
+            course.setH3(res.getString("h3"));
+            course.setAnswer(res.getInt("answer"));
+            arr.add(course);
+        }
+        return arr;
+    }

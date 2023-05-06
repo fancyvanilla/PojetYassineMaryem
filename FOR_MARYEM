@@ -1,10 +1,8 @@
-public ArrayList<Course>getUserCourses(int id_user) throws SQLException {
+public ArrayList<Course>getUserCourses(User user) throws SQLException {
         String sql;
-        User user=this.getUserById(id_user);
-        if (user.getRole()==0) {sql="select * from courses a join course_student b on a.id=b.course_id and b.student_id=? ";}
-        else {sql ="select * from courses where teach_id=? ";}
+        user.getRole() ? sql ="select * from courses where teach_id=? " : sql="select * from courses a join course_student b on a.id=b.course_id and b.student_id=? ";
         PreparedStatement stmt=con.prepareStatement(sql);
-        stmt.setInt(1,id_user);
+        stmt.setInt(1,user.getId());
         ResultSet res=stmt.executeQuery();
         ArrayList<Course> arr=new ArrayList<>();
         while (res.next()) {
